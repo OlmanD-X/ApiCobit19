@@ -9,16 +9,16 @@
 
     class FactoryUsers{
 
-        public static function createUser(int $typeUser):IUser{
-            switch ($typeUser) {
+        public static function createUser(object $user):IUser{
+            switch ((int) $user->TYPE_USER) {
                 case 1:
-                    return new GeneralAdmin;
+                    return new GeneralAdmin((int) $user->ID,$user->USERNAME,$user->PASS,(int) $user->TYPE_USER,$user->token);
                     break;
                 case 2:
-                    return new Admin;
+                    return new Admin((int) $user->ID,$user->USERNAME,$user->PASS,(int) $user->TYPE_USER,$user->token,$user->COMPANY_ID,$user->COMPANY_NAME);
                     break;
                 case 3:
-                    return new Employee;
+                    return new Employee((int) $user->ID,$user->USERNAME,$user->PASS,(int) $user->TYPE_USER,$user->token,$user->COMPANY_ID,$user->COMPANY_NAME);
                     break;
             }
             return null;

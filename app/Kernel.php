@@ -10,7 +10,7 @@
         private static $method = null;
         private static $parameters = array();
 
-        public static function Process()
+        public static function Process($url)
         {
             header('Access-Control-Allow-Origin:*');
             header('Access-Control-Allow-Headers:Authorization');
@@ -18,7 +18,7 @@
             header('Content-Type: application/json');
             date_default_timezone_set("America/Lima");
 
-            $url = self::GetUrl();
+            // $url = self::GetUrl();
             self::GetNameController($url);
             self::SetController();
             self::GetMethod($url);
@@ -54,7 +54,9 @@
                 case 'Login':
                     self::$controller = new Login;
                     break;
-                
+                // case 'Users': 
+                //     self::$controller = new Users;
+                //     break;
                 default:
                     # code...
                     break;

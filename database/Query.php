@@ -1,7 +1,8 @@
 <?php
     namespace Database;
 
-    use \PDO;
+    use PDO;
+    use PDOException;
 
     class Query{
 
@@ -10,9 +11,11 @@
 
         public function __construct()
         {
-            $this->dbh = DB::GetConnection();
-            if(!$this->dbh instanceof PDO)
-                throwError(CONNECTION_DATABASE_ERROR,$this->dbh);
+            try {
+                $this->dbh = DB::GetConnection();
+            } catch (PDOException $e) {
+                throw $e;
+            }
         }
 
         public function Prepare($sql){

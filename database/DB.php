@@ -1,8 +1,8 @@
 <?php
     namespace Database;
 
-    use \PDO;
-    use \PDOException;
+    use PDO;
+    use PDOException;
 
     class DB{
         private static $host = DB_HOST;
@@ -16,28 +16,28 @@
 
         private function __construct() { }
 
-        private static function GetInstance()
-        {
-            if(is_null(self::$instance))
-                self::$instance = new self();
-        }
+        // private static function GetInstance()
+        // {
+        //     if(is_null(self::$instance))
+        //         self::$instance = new self();
+        // }
 
         public static function GetConnection()
         {
-            self::GetInstance();
+            // self::GetInstance();
             if (is_null(self::$dbh)) {
                 $dsn = 'mysql:host='.self::$host.';dbname='.self::$db_name;
                 $options = array(
                     PDO::ATTR_PERSISTENT => true,
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
                 );
                 
                 try {
                     self::$dbh = new PDO($dsn,self::$user,self::$password,$options);
+                    self::$dbh->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
                     self::$dbh->exec('set names utf8');
                 } catch (PDOException $e) {
-                    return $e->getMessage();
+                    throw new PDOException($e);
                 }
             }
 

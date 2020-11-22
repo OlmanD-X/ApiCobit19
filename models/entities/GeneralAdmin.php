@@ -3,12 +3,20 @@
     namespace Models\Entities;
 
     use Models\Entities\User;
-    use Models\Interfaces\IUser;
 
-    class GeneralAdmin extends User implements IUser{
+    class GeneralAdmin extends User{
 
-        public function create()
+        public function __construct(int $id,string $userName,string $pass,int $type,string $token){
+            parent::__construct($id,$userName,$pass,$type,$token);
+        }
+
+        public function GetCompanyId() : int
         {
-            print_r("Hello World GeneralAdmin!!");
+            return 1;
+        }
+
+        public function GetCompanyName() : string
+        {
+            return 'Soft';
         }
     }

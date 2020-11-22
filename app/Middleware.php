@@ -1,8 +1,8 @@
 <?php
-    namespace app;
+    namespace App;
 
-    use \JWT;
-    use Services\User;
+    use Libraries\JWT;
+    use Models\Entities\User;
 
     class Middleware
     {
@@ -12,8 +12,7 @@
                     $token = getBearerToken();
                     $payload = JWT::decode($token,SECRETE_KEY,['HS256']);
                     $id = $payload->userId;
-                    $user = new User;
-                    $tokenDB = $user->GetToken($id);
+                    $tokenDB = User::GetToken($id);
                     if(!is_null($tokenDB->TOKEN)){
                         if($token !== $tokenDB->TOKEN){
                             returnResponse(INVALID_ACCESS_TOKEN,'Invalid Token. Please login.');

@@ -1,5 +1,10 @@
 <?php
 
+namespace Libraries;
+
+use Exception;
+use Datetime;
+use DomainException;
 /**
  * JSON Web Token implementation, based on this spec:
  * https://tools.ietf.org/html/rfc7519

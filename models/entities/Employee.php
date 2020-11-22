@@ -3,14 +3,25 @@
     namespace Models\Entities;
 
     use Models\Entities\User;
-    use Models\Interfaces\IUser;
 
-    class Employee extends User implements IUser{
+    class Employee extends User{
 
         private $companyId;
+        private $companyName;
 
-        public function create()
+        public function __construct(int $id,string $userName,string $pass,int $type,string $token,int $companyId,string $companyName){
+            parent::__construct($id,$userName,$pass,$type,$token);
+            $this->companyId = $companyId;
+            $this->companyName = $companyName;
+        }
+
+        public function GetCompanyId() : int
         {
-            print_r("Hello World Employee!!");
+            return $this->companyId;
+        }
+
+        public function GetCompanyName() : string
+        {
+            return $this->companyName;
         }
     }
