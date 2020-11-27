@@ -13,8 +13,8 @@
                     $payload = JWT::decode($token,SECRETE_KEY,['HS256']);
                     $id = $payload->userId;
                     $tokenDB = User::GetToken($id);
-                    if(!is_null($tokenDB->TOKEN)){
-                        if($token !== $tokenDB->TOKEN){
+                    if(!is_null($tokenDB)){
+                        if($token !== $tokenDB){
                             returnResponse(INVALID_ACCESS_TOKEN,'Invalid Token. Please login.');
                         }
                     }
@@ -26,5 +26,7 @@
                 }
             }
         }
+
+
     }
     
