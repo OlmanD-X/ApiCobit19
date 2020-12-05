@@ -25,10 +25,11 @@
 
         public static function GetToken(int $id) : string{
             try {
-                self::$query = new  Query;
+                self::$query = new Query;
                 self::$query->Prepare("SELECT TOKEN FROM USERS WHERE ID=:id");
                 self::$query->Bind(':id',$id);
-                return self::$query->GetRecord();
+                $token = self::$query->GetRecord();
+                return $token->TOKEN;
             } catch (\Throwable $th) {
                 throw new Exception($th);
             }

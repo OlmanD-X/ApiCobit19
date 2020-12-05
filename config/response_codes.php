@@ -12,6 +12,7 @@
     define('CONTROLLER_NOT_EXISTS',         106);
     define('ROUTE_NOT_SPECIFIED',           107);
     define('USER_NOT_FOUND',                108);
+    define('INVALID_PARAM',                 109);
 
     /*Server Errors*/
     define('JWT_PROCESSING_ERROR',			    301);

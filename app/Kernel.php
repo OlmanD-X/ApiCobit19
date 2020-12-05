@@ -2,6 +2,7 @@
     
     namespace App;
 
+    use Controllers\Companies;
     use Controllers\Login;
 
     class Kernel
@@ -12,13 +13,7 @@
 
         public static function Process($url)
         {
-            header('Access-Control-Allow-Origin:*');
-            header('Access-Control-Allow-Headers:Authorization');
-            header('Access-Control-Allow-Methods:GET,POST,PUT,DELETE');
-            header('Content-Type: application/json');
-            date_default_timezone_set("America/Lima");
 
-            // $url = self::GetUrl();
             self::GetNameController($url);
             self::SetController();
             self::GetMethod($url);
@@ -53,6 +48,9 @@
             switch (self::$controller) {
                 case 'Login':
                     self::$controller = new Login;
+                    break;
+                case 'Companies':
+                    self::$controller = new Companies;
                     break;
                 // case 'Users': 
                 //     self::$controller = new Users;
