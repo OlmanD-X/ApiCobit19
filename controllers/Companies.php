@@ -84,9 +84,9 @@
                 throwError(INVALID_PARAM,'Invalid param Id.');
 
             $companyService = new CompanyService;
-            $company = $companyService->delete((int)$id);
+            $ok = $companyService->delete((int)$id);
 
-            if(is_string($company))
+            if(is_string($ok))
                 throwError(DELETED_RECORDS_NOT_COMPLETE,'Company could not be deleted.');
 
             returnResponse(RECORDS_DELETE_SUCCESSFULLY,'Company successfully deleted.');

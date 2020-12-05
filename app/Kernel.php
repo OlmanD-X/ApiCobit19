@@ -4,8 +4,9 @@
 
     use Controllers\Companies;
     use Controllers\Login;
+    use Controllers\Objectives;
 
-    class Kernel
+class Kernel
     {
         private static $controller = null;
         private static $method = null;
@@ -51,6 +52,9 @@
                     break;
                 case 'Companies':
                     self::$controller = new Companies;
+                    break;
+                case 'Objectives':
+                    self::$controller = new Objectives;
                     break;
                 // case 'Users': 
                 //     self::$controller = new Users;
