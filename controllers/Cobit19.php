@@ -80,7 +80,7 @@
          * @return object
          */
 
-        public function addHist($desc,$id,$relations)
+        public function addHist()
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
@@ -327,7 +327,7 @@
          * 
          * @return mixed
          */
-        public function addRelationsByHist($relations,$idHist)
+        public function addRelationsByHist()
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');

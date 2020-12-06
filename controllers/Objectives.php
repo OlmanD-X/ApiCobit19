@@ -87,7 +87,7 @@
          * @return object
          */
 
-        public function add($desc,$idCompany,$idPerspective)
+        public function add()
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
@@ -151,7 +151,7 @@
          * @return object
          */
 
-        public function update($desc,$idCompany,$idPerspective,$id)
+        public function update()
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');

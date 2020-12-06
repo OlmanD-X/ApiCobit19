@@ -15,7 +15,7 @@
          * @param string $pass Contraseña del usuario
          * 
          */
-        public function login($userName,$pass){
+        public function login(){
 
             if($_SERVER['REQUEST_METHOD']!=='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');

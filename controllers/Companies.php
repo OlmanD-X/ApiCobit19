@@ -63,7 +63,7 @@
          * 
          * @return object
          */
-        public function add($company,$ruc,$email,$phone)
+        public function add()
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
@@ -139,7 +139,7 @@
          * @param int $id Id de la empresa.
          * @return object
          */
-        public function update($company,$ruc,$email,$phone,$id)
+        public function update()
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
