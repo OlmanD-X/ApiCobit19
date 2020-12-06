@@ -4,6 +4,7 @@
 
     use Controllers\Cobit19;
     use Controllers\Companies;
+    use Controllers\Initiatives;
     use Controllers\Login;
     use Controllers\Objectives;
 
@@ -60,9 +61,9 @@ class Kernel
                 case 'Cobit19':
                     self::$controller = new Cobit19;
                     break;
-                // case 'Users': 
-                //     self::$controller = new Users;
-                // break;
+                case 'Initiatives': 
+                    self::$controller = new Initiatives;
+                break;
                 default:
                     # code...
                     break;

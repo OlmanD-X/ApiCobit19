@@ -6,7 +6,9 @@
     class Objectives{
 
         /**
-         * Obtiene todos los objetivos de la base de datos. Método http => GET
+         * Obtiene todos los objetivos de la base de datos. Método http => GET.
+         * 
+         * URL : /Objectives/getObjectives
          * 
          * @return object
          */
@@ -25,7 +27,9 @@
         }
 
         /**
-         * Obtiene todos los objetivos de una empresa. Método http => GET
+         * Obtiene todos los objetivos de una empresa. Método http => GET.
+         * 
+         * URL : /Objectives/getObjectivesByCompany/id
          * 
          * @param int $id Id de la empresa
          * @return object
@@ -48,7 +52,9 @@
         }
 
         /**
-         * Obtiene un objetivo estratégico. Método http => GET
+         * Obtiene un objetivo estratégico. Método http => GET.
+         * 
+         * URL : /Objectives/getObjective/id
          * 
          * @param int $id Id del objetivo estratégico
          * @return object
@@ -71,7 +77,9 @@
         }
 
         /**
-         * Registra un objetivo estratégico. Método http => POST
+         * Registra un objetivo estratégico. Método http => POST.
+         * 
+         * URL : /Objectives/add
          * 
          * @param string $desc Objetivo estratégico
          * @param int $idCompany Id de la empresa
@@ -79,7 +87,7 @@
          * @return object
          */
 
-        public function add()
+        public function add($desc,$idCompany,$idPerspective)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
@@ -107,7 +115,9 @@
         }
 
         /**
-         * Registra un objetivo estratégico. Método http => DELETE
+         * Registra un objetivo estratégico. Método http => DELETE.
+         * 
+         * URL : /Objectives/delete/id
          * 
          * @param int $id Id del objetivo estratégico
          * @return object
@@ -130,7 +140,9 @@
         }
 
         /**
-         * Registra un objetivo estratégico. Método http => POST
+         * Registra un objetivo estratégico. Método http => POST.
+         * 
+         * URL : /Objectives/update
          * 
          * @param string $desc Objetivo estratégico
          * @param int $idCompany Id de la empresa
@@ -139,7 +151,7 @@
          * @return object
          */
 
-        public function update()
+        public function update($desc,$idCompany,$idPerspective,$id)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');

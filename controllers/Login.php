@@ -7,13 +7,15 @@
     class Login
     {
         /**
-         * Loguea un usuario. Método http => POST
+         * Loguea un usuario. Método http => POST.
+         * 
+         * URL : /Login/login
          * 
          * @param string $userName Nombre del usuario
          * @param string $pass Contraseña del usuario
-         * @api
+         * 
          */
-        public function login(){
+        public function login($userName,$pass){
 
             if($_SERVER['REQUEST_METHOD']!=='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
@@ -79,5 +81,27 @@
 
             if(!$isCorrect)
                 throwError($code,$message);
+        }
+
+        /**
+         * Obtiene las transacciones en la base de datos. Método htpp => GET
+         * 
+         * URL : /Login/getTransactions
+         * 
+         * @return object
+         */
+        public function getTransactions()
+        {
+            if($_SERVER['REQUEST_METHOD']!=='GET')
+                throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+
+            $userService = new UserService;
+
+            $trans = $userService->getTransactions();
+
+            if(is_string($trans))
+                throwError(GET_RECORDS_NOT_COMPLETE,'Transacciones no obtenidas.'. $trans);
+
+            returnResponse(GET_RECORDS_SUCCESSFULLY,'Transacciones obtenidas correctamente');
         }
     }

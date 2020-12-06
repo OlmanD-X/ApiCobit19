@@ -100,13 +100,17 @@
         public function addHist($id,$desc)
         {
             try {
-                $version = $this->getHistByDesc($desc);
+                $version = $this->getHistByDesc($desc,$id);
                 if(is_string($version))
                     return false;
-                if(!$version){
+                if($version==0){
                     $this->query->Prepare("INSERT INTO HISTORIAL(DES,COMPANY_ID) VALUES(:desc,:id)");
                 }
                 else{
+                    $idAux = $this->getIdHistForAdd($desc,$id,$version);
+                    $bool = $this->dischargeHist($idAux);
+                    if(is_string($bool))
+                        return false;
                     $version++;
                     $this->query->Prepare("INSERT INTO HISTORIAL(DES,VERSION,COMPANY_ID) VALUES(:desc,$version,:id)");
                 }
@@ -118,16 +122,44 @@
             } 
         }
 
-        public function getHistByDesc($desc)
+        public function getIdHistForAdd($desc,$idCompany,$version)
         {
             try {
-                $this->query->Prepare("SELECT MAX(VERSION) AS VERSION FROM HISTORIAL WHERE DES = :desc");
+                $this->query->Prepare("SELECT ID AS VERSION FROM HISTORIAL WHERE DES = :desc AND COMPANY_ID=:idCompany AND VERSION=:version");
                 $this->query->Bind(":desc",$desc);
+                $this->query->Bind(":idCompany",$idCompany);
+                $this->query->Bind(":version",$version);
                 $EG = $this->query->GetRecord();
-                $id = false;
+                return $EG->ID;
+            } catch (\Throwable $th) {
+                return $th->getMessage();
+            } 
+        }
+
+        public function getHistByDesc($desc,$idCompany)
+        {
+            try {
+                $this->query->Prepare("SELECT MAX(VERSION) AS VERSION FROM HISTORIAL WHERE DES = :desc AND COMPANY_ID=:idCompany");
+                $this->query->Bind(":desc",$desc);
+                $this->query->Bind(":idCompany",$idCompany);
+                $EG = $this->query->GetRecord();
+                $id = 0;
                 if(!is_null($EG->VERSION))
                     $id = (int) $EG->VERSION;
                 return $id;
+            } catch (\Throwable $th) {
+                return $th->getMessage();
+            } 
+        }
+
+        public function getHistByDescOnly($desc,$idCompany)
+        {
+            try {
+                $this->query->Prepare("SELECT DES FROM HISTORIAL WHERE DES = :desc AND COMPANY_ID=:idCompany");
+                $this->query->Bind(":desc",$desc);
+                $this->query->Bind(":idCompany",$idCompany);
+                $EG = $this->query->GetRecord();
+                return $EG;
             } catch (\Throwable $th) {
                 return $th->getMessage();
             } 
@@ -308,6 +340,30 @@
                 $this->query->Prepare("UPDATE REL_OC SET GRADO = :grado WHERE ID=:id");
                 $this->query->Bind("id",$id);
                 $this->query->Bind("grado",$grado);
+                return $this->query->Execute();
+            } catch (\Throwable $th) {
+                return $th->getMessage();
+            } 
+        }
+
+        public function deleteHist($id)
+        {
+            try {
+                $this->query->Prepare("UPDATE HISTORIAL SET STATE = 0 WHERE ID=:id");
+                $this->query->Bind("id",$id);
+                return $this->query->Execute();
+            } catch (\Throwable $th) {
+                return $th->getMessage();
+            } 
+        }
+
+        public function dischargeHist($id)
+        {
+            try {
+                $now = date("Y-m-d H:i:s");
+                $this->query->Prepare("UPDATE HISTORIAL SET DISCHARGUE_DATE = :date WHERE ID=:id");
+                $this->query->Bind("id",$id);
+                $this->query->Bind("date",$now);
                 return $this->query->Execute();
             } catch (\Throwable $th) {
                 return $th->getMessage();

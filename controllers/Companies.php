@@ -6,7 +6,9 @@
     class Companies{
 
         /**
-         * Obtiene todos los registros de las empresas. Método http => GET
+         * Obtiene todos los registros de las empresas. Método http => GET.
+         * 
+         * URL : /Companies/getCompanies
          * 
          * @return object
          */
@@ -25,7 +27,9 @@
         }
 
         /**
-         * Busca una empresa por su id. Método http => GET
+         * Busca una empresa por su id. Método http => GET.
+         * 
+         * URL : /Companies/getCompany/id
          * 
          * @param int $id Id de la empresa
          * @return object
@@ -48,15 +52,18 @@
         }
 
         /**
-         * Registra una empresa. Método http => POST
+         * Registra una empresa. Método http => POST.
+         * 
+         * URL : /Companies/add
          * 
          * @param string $company Razon Social de la empresa
          * @param int $ruc Ruc de la empresa
          * @param string $email Email de la empresa
          * @param int phone phone de la empresa
+         * 
          * @return object
          */
-        public function add()
+        public function add($company,$ruc,$email,$phone)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
@@ -96,7 +103,9 @@
         }
 
         /**
-         * Elimina una empresa. Método http => DELETE
+         * Elimina una empresa. Método http => DELETE.
+         * 
+         * URL : /Companies/delete/id
          * 
          * @param int $id Id de la empresa
          * @return object
@@ -119,7 +128,9 @@
         }
 
         /**
-         * Actualiza una empresa. Método http => POST
+         * Actualiza una empresa. Método http => POST.
+         * 
+         * URL : /Companies/update
          * 
          * @param string $company
          * @param int $ruc Ruc de la empresa.
@@ -128,7 +139,7 @@
          * @param int $id Id de la empresa.
          * @return object
          */
-        public function update()
+        public function update($company,$ruc,$email,$phone,$id)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');

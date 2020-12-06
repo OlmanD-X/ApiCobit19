@@ -5,7 +5,9 @@
 
     class Cobit19{
         /**
-         * Obtiene las EG del marco COBIT 19. Método http => GET
+         * Obtiene las EG del marco COBIT 19. Método http => GET.
+         * 
+         * URL : /Cobit19/getEG
          * 
          * @return object
          */
@@ -24,7 +26,9 @@
         }
 
         /**
-         * Obtiene las AG del marco COBIT 19. Método http => GET
+         * Obtiene las AG del marco COBIT 19. Método http => GET.
+         * 
+         * URL : /Cobit19/getAG
          * 
          * @return object
          */
@@ -43,7 +47,9 @@
         }
 
         /**
-         * Obtiene los OC del marco COBIT 19. Método http => GET
+         * Obtiene los OC del marco COBIT 19. Método http => GET.
+         * 
+         * URL : /Cobit19/getOC
          * 
          * @return object
          */
@@ -63,7 +69,9 @@
         }
 
         /**
-         * Registra un nuevo registro en el historial. Método http => POST
+         * Registra un nuevo registro en el historial. Método http => POST.
+         * 
+         * URL : /Cobit19/addHist
          * 
          * @param string $desc Descripción del historial
          * @param int $id Id de la empresa
@@ -72,8 +80,7 @@
          * @return object
          */
 
-         //Documentar
-        public function addHist()
+        public function addHist($desc,$id,$relations)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
@@ -119,7 +126,9 @@
         }
 
         /**
-         * Obtiene todo el histórico de una empresa. Método http => GET
+         * Obtiene todo el histórico de una empresa. Método http => GET.
+         * 
+         * URL : /Cobit19/getHistByCompany/id
          * 
          * @param int $id Id de la empresa
          * @return object
@@ -139,7 +148,9 @@
         }
 
         /**
-         * Obtiene todo el mapeo cobit de un histórico. Método htpp => GET
+         * Obtiene todo el mapeo cobit de un histórico. Método htpp => GET.
+         * 
+         * URL : /Cobit19/getHist/id
          * 
          * @param int $id Id del histórico
          * @return object
@@ -158,7 +169,8 @@
         }
 
         /**
-         * Registra un nuevo registro en el historial. Método http => POST
+         * Registra un nuevo registro en el historial. Método http => POST.
+         * 
          * @param int $id Id de la empresa
          * @param string $desc Descripcion del historial
          * 
@@ -171,23 +183,28 @@
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
 
             $cobit19Service = new Cobit19Service;
-            $exists = $cobit19Service->getHistByDesc($desc);
-            if(is_int($exists))
-                throwError(INSERTED_RECORDS_NOT_COMPLETE,'La descripción ya ha sido registrada.');
-            else if(is_string($exists))
-                throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$exists);
-                
+
+            $VERSION = $cobit19Service->getHistByDesc($desc,$id);
+            if(is_string($VERSION))
+                throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$VERSION);
+
+            if($VERSION==0){
+                $exists = $cobit19Service->getHistByDescOnly($desc,$id);
+                if(is_string($exists))
+                    throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$exists);
+                else if($exists<1)
+                    throwError(INSERTED_RECORDS_NOT_COMPLETE,'La descripción ya ha sido registrada.');
+            }   
             $isAdd = $cobit19Service->addHist($id,$desc);
             if(is_string($isAdd))
                 throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$isAdd);
             else if(!$isAdd)
                 throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.');
-
-            // returnResponse(SUCCESS_RESPONSE,'Data inserted successfully',$response);
         }
 
         /**
-         * Registra el mapeo de los objetivos estratégicos con las EG. Método http => POST
+         * Registra el mapeo de los objetivos estratégicos con las EG. Método http => POST.
+         * 
          * @param array $arrayRelations Array del mapeo OE vs EG
          * @param int $idHist Id del historial
          * 
@@ -276,7 +293,9 @@
         }
 
         /**
-         * Asigna el grado de un OC. Método http => POST
+         * Asigna el grado de un OC. Método http => POST.
+         * 
+         * URL : /Cobit19/setGrado/id/desc
          * 
          * @param int $id Id del OC de un histórico
          * @param mixed $grado Descripción del grado
@@ -299,16 +318,22 @@
         }
 
         /**
-         * Registra el mapeo de los objetivos estratégicos con las EG. Método http => POST
-         * @param object $arrayRelations Array del mapeo OE vs EG
+         * Registra el mapeo de los objetivos estratégicos con las EG. Método http => POST.
+         * 
+         * URL : /Cobit19/addRelationsByHist/
+         * 
+         * @param object $relations Array del mapeo OE vs EG
          * @param int $idHist Id del historial
          * 
          * @return mixed
          */
-        public function addRelationsByHist($arrayRelations,$idHist)
+        public function addRelationsByHist($relations,$idHist)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+
+            $arrayRelations = json_decode($_POST['relations']);
+            $idHist = $_POST['idHist'] ?? NULL;
 
             $cobit19Service = new Cobit19Service;
             $isAdd = $cobit19Service->addRelations($arrayRelations,$idHist);
@@ -327,7 +352,9 @@
         }
 
         /**
-         * Registra las AG resultantes. Método http => POST
+         * Registra las AG resultantes. Método http => POST.
+         * 
+         * URL : /Cobit19/addAGByHist/idHist
          * 
          * @param int $idHist Id del historial
          * 
@@ -358,6 +385,16 @@
             returnResponse(SUCCESS_RESPONSE,'Data inserted successfully');
         }
 
+        /**
+         * Registra los OC resultantes. Método http => POST.
+         * 
+         * URL : /Cobit19/addOCByHist/idHist
+         * 
+         * @param int $idHist Id del historial
+         * 
+         * @return mixed
+         * 
+         */
         public function addOCByHist($idHist)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
@@ -380,9 +417,13 @@
         }
 
         /**
-         * Esto es for bryan
+         * Obtiene las EG de un histórico. Método http => GET.
+         * 
+         * URL : /Cobit19/getEGByHist/id
          * 
          * @param int 
+         * 
+         * @return mixed
          * 
          */
 
@@ -401,6 +442,16 @@
 
         }
 
+        /**
+         * Obtiene las AG de un histórico. Método http => GET.
+         * 
+         * URL : /Cobit19/getAGByHist/id
+         * 
+         * @param int 
+         * 
+         * @return mixed
+         * 
+         */
         public function getAGByHist($id)
         {
             if($_SERVER['REQUEST_METHOD']!='GET')
@@ -416,6 +467,16 @@
 
         }
 
+        /**
+         * Obtiene los OC de un histórico. Método http => GET.
+         * 
+         * URL : /Cobit19/getOCByHist/id
+         * 
+         * @param int 
+         * 
+         * @return mixed
+         * 
+         */
         public function getOCByHist($id)
         {
             if($_SERVER['REQUEST_METHOD']!='GET')
@@ -429,5 +490,51 @@
 
             returnResponse(RECORDS_UPDATE_SUCCESSFULLY,'Data updated successfully',$OC);
 
+        }
+
+        /**
+         * Elimina un histórico. Método http => DELETE
+         * 
+         * URL : /Cobit19/deleteHist/id
+         * 
+         * @param int $id Id del histórico
+         * 
+         * @return object
+         */
+        public function deleteHist($id)
+        {
+            if($_SERVER['REQUEST_METHOD']!='DELETE')
+                throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+            
+            $cobit19Service = new Cobit19Service;
+            $isDelete = $cobit19Service->deleteHist($id);
+
+            if(is_string($isDelete))
+                throwError(DELETED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$isDelete);
+
+            returnResponse(RECORDS_DELETE_SUCCESSFULLY,'Historial eliminado correctamente');
+        }
+
+        /**
+         * Da de baja un histórico. Método http => POST
+         * 
+         * URL : /Cobit19/dischargeHist/id
+         * 
+         * @param int $id Id del histórico
+         * 
+         * @return object
+         */
+        public function dischargeHist($id)
+        {
+            if($_SERVER['REQUEST_METHOD']!='POST')
+                throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+            
+            $cobit19Service = new Cobit19Service;
+            $isDelete = $cobit19Service->dischargeHist($id);
+
+            if(is_string($isDelete))
+                throwError(DELETED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$isDelete);
+
+            returnResponse(RECORDS_DELETE_SUCCESSFULLY,'Historial dado de baja correctamente');
         }
     }
