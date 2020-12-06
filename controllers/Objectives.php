@@ -5,6 +5,11 @@
 
     class Objectives{
 
+        /**
+         * Obtiene todos los objetivos de la base de datos. Método http => GET
+         * 
+         * @return object
+         */
         public function getObjectives()
         {
             if($_SERVER['REQUEST_METHOD']!='GET')
@@ -19,6 +24,12 @@
             returnResponse(GET_RECORDS_SUCCESSFULLY,'Objectives successfully obtained ',$objectives);
         }
 
+        /**
+         * Obtiene todos los objetivos de una empresa. Método http => GET
+         * 
+         * @param int $id Id de la empresa
+         * @return object
+         */
         public function getObjectivesByCompany($id)
         {
             if($_SERVER['REQUEST_METHOD']!='GET')
@@ -36,6 +47,12 @@
             returnResponse(GET_RECORDS_SUCCESSFULLY,'Objectives successfully obtained ',$objectives);
         }
 
+        /**
+         * Obtiene un objetivo estratégico. Método http => GET
+         * 
+         * @param int $id Id del objetivo estratégico
+         * @return object
+         */
         public function getObjective($id)
         {
             if($_SERVER['REQUEST_METHOD']!='GET')
@@ -52,6 +69,15 @@
 
             returnResponse(GET_RECORDS_SUCCESSFULLY,'Objective successfully obtained ',$objective);
         }
+
+        /**
+         * Registra un objetivo estratégico. Método http => POST
+         * 
+         * @param string $desc Objetivo estratégico
+         * @param int $idCompany Id de la empresa
+         * @param int $idPerspective Id de la perspectiva
+         * @return object
+         */
 
         public function add()
         {
@@ -80,6 +106,12 @@
                 returnResponse(INSERTED_RECORDS_NOT_COMPLETE,'Objective could not be registered');
         }
 
+        /**
+         * Registra un objetivo estratégico. Método http => DELETE
+         * 
+         * @param int $id Id del objetivo estratégico
+         * @return object
+         */
         public function delete($id)
         {
             if($_SERVER['REQUEST_METHOD']!='DELETE')
@@ -96,6 +128,16 @@
 
             returnResponse(RECORDS_DELETE_SUCCESSFULLY,'Objective successfully deleted.');
         }
+
+        /**
+         * Registra un objetivo estratégico. Método http => POST
+         * 
+         * @param string $desc Objetivo estratégico
+         * @param int $idCompany Id de la empresa
+         * @param int $idPerspective Id de la perspectiva
+         * @param int $id Id del objetivo estratégico
+         * @return object
+         */
 
         public function update()
         {

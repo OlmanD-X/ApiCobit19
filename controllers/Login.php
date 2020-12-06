@@ -6,6 +6,13 @@
 
     class Login
     {
+        /**
+         * Loguea un usuario. Método http => POST
+         * 
+         * @param string $userName Nombre del usuario
+         * @param string $pass Contraseña del usuario
+         * @api
+         */
         public function login(){
 
             if($_SERVER['REQUEST_METHOD']!=='POST')
@@ -26,6 +33,15 @@
 
             returnResponse(SUCCESS_RESPONSE,'Successful login',$data);
         }
+
+        /** 
+         * Este método es de uso interno
+         * Valida la creación de una instancia de usuario
+         * 
+         * @param User $user Instancia a validar
+         * @return void
+         * @access private
+        */
 
         private function ValidateInstance($user)
         {

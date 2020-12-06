@@ -5,6 +5,11 @@
 
     class Companies{
 
+        /**
+         * Obtiene todos los registros de las empresas. Método http => GET
+         * 
+         * @return object
+         */
         public function getCompanies()
         {
             if($_SERVER['REQUEST_METHOD']!='GET')
@@ -19,6 +24,12 @@
             returnResponse(GET_RECORDS_SUCCESSFULLY,'Companies successfully obtained ',$companies);
         }
 
+        /**
+         * Busca una empresa por su id. Método http => GET
+         * 
+         * @param int $id Id de la empresa
+         * @return object
+         */
         public function getCompany($id)
         {
             if($_SERVER['REQUEST_METHOD']!='GET')
@@ -36,6 +47,15 @@
             returnResponse(GET_RECORDS_SUCCESSFULLY,'Company successfully obtained ',$company);
         }
 
+        /**
+         * Registra una empresa. Método http => POST
+         * 
+         * @param string $company Razon Social de la empresa
+         * @param int $ruc Ruc de la empresa
+         * @param string $email Email de la empresa
+         * @param int phone phone de la empresa
+         * @return object
+         */
         public function add()
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
@@ -75,6 +95,12 @@
                 returnResponse(INSERTED_RECORDS_NOT_COMPLETE,'Company could not be registered');
         }
 
+        /**
+         * Elimina una empresa. Método http => DELETE
+         * 
+         * @param int $id Id de la empresa
+         * @return object
+         */
         public function delete($id)
         {
             if($_SERVER['REQUEST_METHOD']!='DELETE')
@@ -92,6 +118,16 @@
             returnResponse(RECORDS_DELETE_SUCCESSFULLY,'Company successfully deleted.');
         }
 
+        /**
+         * Actualiza una empresa. Método http => POST
+         * 
+         * @param string $company
+         * @param int $ruc Ruc de la empresa.
+         * @param string $email Email de la empresa.
+         * @param int $phone phone de la empresa.
+         * @param int $id Id de la empresa.
+         * @return object
+         */
         public function update()
         {
             if($_SERVER['REQUEST_METHOD']!='POST')

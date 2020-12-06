@@ -2,6 +2,7 @@
     
     namespace App;
 
+    use Controllers\Cobit19;
     use Controllers\Companies;
     use Controllers\Login;
     use Controllers\Objectives;
@@ -55,6 +56,9 @@ class Kernel
                     break;
                 case 'Objectives':
                     self::$controller = new Objectives;
+                    break;
+                case 'Cobit19':
+                    self::$controller = new Cobit19;
                     break;
                 // case 'Users': 
                 //     self::$controller = new Users;
