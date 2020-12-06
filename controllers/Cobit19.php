@@ -72,6 +72,7 @@
          * @return object
          */
 
+         //Documentar
         public function addHist()
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
@@ -205,7 +206,27 @@
             else if(!$isAdd)
                 throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.');
 
-            // returnResponse(SUCCESS_RESPONSE,'Data inserted successfully',$response);
+        }
+
+        public function addRelationsByHist($arrayRelations,$idHist)
+        {
+            if($_SERVER['REQUEST_METHOD']!='POST')
+                throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+
+            $cobit19Service = new Cobit19Service;
+            $isAdd = $cobit19Service->addRelations($arrayRelations,$idHist);
+            if(is_string($isAdd))
+                throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$isAdd);
+            else if(!$isAdd)
+                throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.');
+
+            $EG = array_unique($arrayRelations->eg);
+            sort($EG);
+            $isAdd = $cobit19Service->addEG($EG,$idHist);
+            if(is_string($isAdd))
+                throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$isAdd);
+
+            returnResponse(SUCCESS_RESPONSE,'Data inserted successfully');
         }
 
         /**
@@ -231,6 +252,31 @@
             // returnResponse(SUCCESS_RESPONSE,'Data inserted successfully',$response);
         }
 
+        public function addAGByHist($idHist)
+        {
+            if($_SERVER['REQUEST_METHOD']!='POST')
+                throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+
+            $cobit19Service = new Cobit19Service;
+
+            $arrayEG = $cobit19Service->getEGByHist($idHist);
+            $EG = array();
+
+            foreach ($arrayEG as $key => $item) {
+                array_push($EG,$item->EGID);
+            }
+
+            $arrayAG = $cobit19Service->mapAG($EG);
+
+            $isAdd = $cobit19Service->addAG($arrayAG,$idHist);
+            if(is_string($isAdd))
+                throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$isAdd);
+            else if(!$isAdd)
+                throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.');
+
+            returnResponse(SUCCESS_RESPONSE,'Data inserted successfully');
+        }
+
         /**
          * Registra las AG resultantes. Método http => POST
          * @param array $AG Array con las AG resultantes
@@ -252,6 +298,27 @@
                 throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.');
             
             // returnResponse(SUCCESS_RESPONSE,'Data inserted successfully',$response);
+        }
+
+        public function addOCByHist($idHist)
+        {
+            if($_SERVER['REQUEST_METHOD']!='POST')
+                throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+
+            $cobit19Service = new Cobit19Service;
+            $arrayOC = $cobit19Service->getOCByHist($idHist);
+            $OC = array();
+
+            foreach ($arrayOC as $key => $item) {
+                array_push($OC,$item->OCID);
+            }
+            $isAdd = $cobit19Service->addOC($OC,$idHist);
+            if(is_string($isAdd))
+                throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$isAdd);
+            else if(!$isAdd)
+                throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.');
+
+            returnResponse(SUCCESS_RESPONSE,'Data inserted successfully');
         }
 
         /**
@@ -297,5 +364,57 @@
                 throwError(UPDATED_RECORDS_NOT_COMPLETE,'An error ocurred.');
 
             returnResponse(RECORDS_UPDATE_SUCCESSFULLY,'Data updated successfully');
+        }
+
+        /**
+         * Esto es for bryan
+         * 
+         * @param int 
+         * 
+         */
+
+        public function getEGByHist($id)
+        {
+            if($_SERVER['REQUEST_METHOD']!='GET')
+                throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+            
+            $cobit19Service = new Cobit19Service;
+            $EG = $cobit19Service->getEGByHist($id);
+            
+            if(is_string($EG))
+                throwError(UPDATED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$EG);
+
+            returnResponse(RECORDS_UPDATE_SUCCESSFULLY,'Data updated successfully',$EG);
+
+        }
+
+        public function getAGByHist($id)
+        {
+            if($_SERVER['REQUEST_METHOD']!='GET')
+                throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+            
+            $cobit19Service = new Cobit19Service;
+            $AG = $cobit19Service->getAGByHist($id);
+            
+            if(is_string($AG))
+                throwError(UPDATED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$AG);
+
+            returnResponse(RECORDS_UPDATE_SUCCESSFULLY,'Data updated successfully',$AG);
+
+        }
+
+        public function getOCByHist($id)
+        {
+            if($_SERVER['REQUEST_METHOD']!='GET')
+                throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
+            
+            $cobit19Service = new Cobit19Service;
+            $OC = $cobit19Service->getOCByHist($id);
+            
+            if(is_string($OC))
+                throwError(UPDATED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$OC);
+
+            returnResponse(RECORDS_UPDATE_SUCCESSFULLY,'Data updated successfully',$OC);
+
         }
     }

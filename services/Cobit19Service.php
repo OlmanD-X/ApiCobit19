@@ -147,12 +147,17 @@
         public function addRelations($array,$idHist)
         {
             try {
-                foreach ($array as $item) {
+                $arrOE = $array->oe;
+                $arrEG = $array->eg;
+                foreach ($arrOE as $key => $item) {
                     $objectiveService = new ObjectivesServices;
-                    $OE = $objectiveService->getObjective($item['oe']);
+                    $OE = $objectiveService->getObjective($item);
+                    $arrOE[$key] = $OE->BG_DESC;
+                }
+                foreach ($arrEG as $key => $item) {
                     $this->query->Prepare("INSERT INTO REL_OE_EG(BG_DESC,EG_ID,HIS_ID) VALUES(:desc,:idEG,:idHist)");
-                    $this->query->Bind(":desc",$OE->BG_DESC);
-                    $this->query->Bind(":idEG",$item['eg']);
+                    $this->query->Bind(":desc",$arrOE[$key]);
+                    $this->query->Bind(":idEG",$item);
                     $this->query->Bind(":idHist",$idHist);
                     if(!$this->query->Execute())
                         return false;
@@ -264,7 +269,7 @@
         public function getEGByHist($id)
         {
             try {
-                $this->query->Prepare("SELECT R.ID,R.HIST_ID,E.ID,E.DES,E.PERS_ID,E.COD FROM REL_EG R INNER JOIN EG E ON R.EG_ID = E.ID WHERE R.HIST_ID=:id");
+                $this->query->Prepare("SELECT R.ID,R.HIST_ID,E.ID AS EGID,E.DES,E.PERS_ID,E.COD FROM REL_EG R INNER JOIN EG E ON R.EG_ID = E.ID WHERE R.HIST_ID=:id");
                 $this->query->Bind("id",$id);
                 $data = $this->query->GetRecordS();
                 return $data;
@@ -288,7 +293,7 @@
         public function getOCByHist($id)
         {
             try {
-                $this->query->Prepare("SELECT R.ID,R.GRADO,R.HIST_ID,O.ID,O.DES,O.COD FROM REL_OC R INNER JOIN OC O ON R.OC_ID = O.ID WHERE R.HIST_ID=:id");
+                $this->query->Prepare("SELECT R.ID,R.GRADO,R.HIST_ID,O.ID AS OCID,O.DES,O.COD FROM REL_OC R INNER JOIN OC O ON R.OC_ID = O.ID WHERE R.HIST_ID=:id");
                 $this->query->Bind("id",$id);
                 $data = $this->query->GetRecordS();
                 return $data;
