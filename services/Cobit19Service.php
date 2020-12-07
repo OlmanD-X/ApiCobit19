@@ -101,6 +101,7 @@
         {
             try {
                 $version = $this->getHistByDesc($desc,$id);
+
                 if(is_string($version))
                     return false;
                 if($version==0){
@@ -125,7 +126,7 @@
         public function getIdHistForAdd($desc,$idCompany,$version)
         {
             try {
-                $this->query->Prepare("SELECT ID AS VERSION FROM HISTORIAL WHERE DES = :desc AND COMPANY_ID=:idCompany AND VERSION=:version");
+                $this->query->Prepare("SELECT ID FROM HISTORIAL WHERE DES = :desc AND COMPANY_ID=:idCompany AND VERSION=:version");
                 $this->query->Bind(":desc",$desc);
                 $this->query->Bind(":idCompany",$idCompany);
                 $this->query->Bind(":version",$version);
@@ -271,15 +272,15 @@
                 $this->query->Prepare("SELECT H.DES,H.VERSION,H.CREATE_DATE,H.DISCHARGUE_DATE,H.COMPANY_ID,C.COMPANY_NAME FROM HISTORIAL H INNER JOIN COMPANY C ON H.COMPANY_ID = C.COMPANY_ID WHERE ID=:id");
                 $this->query->Bind("id",$id);
                 $hist = $this->query->GetRecord();
-                array_push($data,['data-hist' => $hist]);
+                $data['data-hist'] = $hist;
                 $relations = $this->getRelationsByHist($id);
-                array_push($data,['relations' => $relations]);
+                $data['relations'] = $relations;
                 $eg = $this->getEGByHist($id);
-                array_push($data,['eg' => $eg]);
+                $data['eg'] = $eg;
                 $ag = $this->getAGByHist($id);
-                array_push($data,['ag' => $ag]);
+                $data['ag'] = $ag;
                 $oc = $this->getOCByHist($id);
-                array_push($data,['oc' => $oc]);
+                $data['oc'] = $oc;
                 return $data;
             } catch (\Throwable $th) {
                 return $th->getMessage();
@@ -313,7 +314,7 @@
         public function getAGByHist($id)
         {
             try {
-                $this->query->Prepare("SELECT R.ID,R.HIST_ID,A.ID,A.DES,A.COD FROM REL_AG R INNER JOIN AG A ON R.AG_ID = A.ID WHERE R.HIST_ID=:id");
+                $this->query->Prepare("SELECT R.ID AS ID,R.HIST_ID,A.ID AS AGID,A.DES,A.COD FROM REL_AG R INNER JOIN AG A ON R.AG_ID = A.ID WHERE R.HIST_ID=:id");
                 $this->query->Bind("id",$id);
                 $data = $this->query->GetRecordS();
                 return $data;

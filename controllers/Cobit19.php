@@ -192,7 +192,7 @@
                 $exists = $cobit19Service->getHistByDescOnly($desc,$id);
                 if(is_string($exists))
                     throwError(INSERTED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$exists);
-                else if($exists<1)
+                else if($exists)
                     throwError(INSERTED_RECORDS_NOT_COMPLETE,'La descripción ya ha sido registrada.');
             }   
             $isAdd = $cobit19Service->addHist($id,$desc);
