@@ -7,6 +7,7 @@
     use Controllers\Initiatives;
     use Controllers\Login;
     use Controllers\Objectives;
+    use Controllers\Users;
 
 class Kernel
     {
@@ -63,6 +64,9 @@ class Kernel
                     break;
                 case 'Initiatives': 
                     self::$controller = new Initiatives;
+                break;
+                case 'Users': 
+                    self::$controller = new Users;
                 break;
                 default:
                     # code...
