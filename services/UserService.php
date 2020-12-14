@@ -27,6 +27,7 @@
                 
                 $user->token = $this->GenerateToken($user);
                 $oUser = FactoryUsers::createUser($user);
+                
 
                 if(is_null($oUser))
                     return CREATE_INSTANCE_ERROR;

@@ -53,7 +53,8 @@
                 self::$query = new  Query;
                 self::$query->Prepare("SELECT U.ID,U.PASS,U.USERNAME,U.TYPE_USER,U.COMPANY_ID,C.COMPANY_NAME FROM USERS U INNER JOIN COMPANY C ON U.COMPANY_ID = C.COMPANY_ID  WHERE U.USERNAME = :username AND U.STATE = '1'");
                 self::$query->Bind(':username',$userName);
-                return self::$query->GetRecord();
+                $user = self::$query->GetRecord();
+                return $user;
             } catch (\Throwable $th) {
                 throw new Exception($th);
             }
