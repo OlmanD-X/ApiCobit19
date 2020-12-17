@@ -184,7 +184,7 @@
                 $arrEG = $array->eg;
                 foreach ($arrOE as $key => $item) {
                     $objectiveService = new ObjectivesServices;
-                    $OE = $objectiveService->getObjective($item);
+                    $OE = $objectiveService->getObjective((int)$item);
                     $arrOE[$key] = $OE->BG_DESC;
                 }
                 foreach ($arrEG as $key => $item) {
@@ -256,8 +256,8 @@
         public function getHistByCompany($id)
         {
             try {
-                $this->query->Prepare("SELECT H.DES,H.VERSION,H.CREATE_DATE,H.DISCHARGUE_DATE,H.COMPANY_ID,C.COMPANY_NAME FROM HISTORIAL H INNER JOIN COMPANY C ON H.COMPANY_ID = C.COMPANY_ID WHERE COMPANY_ID=:id");
-                $this->query->Bind("id",$id);
+                $this->query->Prepare("SELECT H.ID,H.DES,H.VERSION,H.CREATE_DATE,H.DISCHARGUE_DATE,H.COMPANY_ID,C.COMPANY_NAME FROM HISTORIAL H INNER JOIN COMPANY C ON H.COMPANY_ID = C.COMPANY_ID WHERE H.COMPANY_ID=:id AND H.STATE =1 ORDER BY H.CREATE_DATE DESC");
+                $this->query->Bind(":id",$id);
                 $data = $this->query->GetRecords();
                 return $data;
             } catch (\Throwable $th) {
@@ -269,10 +269,10 @@
         {
             try {
                 $data = array();
-                $this->query->Prepare("SELECT H.DES,H.VERSION,H.CREATE_DATE,H.DISCHARGUE_DATE,H.COMPANY_ID,C.COMPANY_NAME FROM HISTORIAL H INNER JOIN COMPANY C ON H.COMPANY_ID = C.COMPANY_ID WHERE ID=:id");
-                $this->query->Bind("id",$id);
+                $this->query->Prepare("SELECT H.ID,H.DES,H.VERSION,H.CREATE_DATE,H.DISCHARGUE_DATE,H.COMPANY_ID,C.COMPANY_NAME FROM HISTORIAL H INNER JOIN COMPANY C ON H.COMPANY_ID = C.COMPANY_ID WHERE ID=:id");
+                $this->query->Bind(":id",$id);
                 $hist = $this->query->GetRecord();
-                $data['data-hist'] = $hist;
+                $data['datahist'] = $hist;
                 $relations = $this->getRelationsByHist($id);
                 $data['relations'] = $relations;
                 $eg = $this->getEGByHist($id);
@@ -291,7 +291,7 @@
         {
             try {
                 $this->query->Prepare("SELECT R.ID,R.BG_DESC,R.EG_ID,R.HIS_ID,E.DES,E.COD,E.PERS_ID FROM REL_OE_EG R INNER JOIN EG E ON R.EG_ID = E.ID WHERE R.HIS_ID=:id");
-                $this->query->Bind("id",$id);
+                $this->query->Bind(":id",$id);
                 $data = $this->query->GetRecordS();
                 return $data;
             } catch (\Throwable $th) {
@@ -303,7 +303,7 @@
         {
             try {
                 $this->query->Prepare("SELECT R.ID,R.HIST_ID,E.ID AS EGID,E.DES,E.PERS_ID,E.COD FROM REL_EG R INNER JOIN EG E ON R.EG_ID = E.ID WHERE R.HIST_ID=:id");
-                $this->query->Bind("id",$id);
+                $this->query->Bind(":id",$id);
                 $data = $this->query->GetRecordS();
                 return $data;
             } catch (\Throwable $th) {
@@ -315,7 +315,7 @@
         {
             try {
                 $this->query->Prepare("SELECT R.ID AS ID,R.HIST_ID,A.ID AS AGID,A.DES,A.COD FROM REL_AG R INNER JOIN AG A ON R.AG_ID = A.ID WHERE R.HIST_ID=:id");
-                $this->query->Bind("id",$id);
+                $this->query->Bind(":id",$id);
                 $data = $this->query->GetRecordS();
                 return $data;
             } catch (\Throwable $th) {
@@ -327,7 +327,7 @@
         {
             try {
                 $this->query->Prepare("SELECT R.ID,R.GRADO,R.HIST_ID,O.ID AS OCID,O.DES,O.COD FROM REL_OC R INNER JOIN OC O ON R.OC_ID = O.ID WHERE R.HIST_ID=:id");
-                $this->query->Bind("id",$id);
+                $this->query->Bind(":id",$id);
                 $data = $this->query->GetRecordS();
                 return $data;
             } catch (\Throwable $th) {
@@ -339,8 +339,8 @@
         {
             try {
                 $this->query->Prepare("UPDATE REL_OC SET GRADO = :grado WHERE ID=:id");
-                $this->query->Bind("id",$id);
-                $this->query->Bind("grado",$grado);
+                $this->query->Bind(":id",$id);
+                $this->query->Bind(":grado",$grado);
                 return $this->query->Execute();
             } catch (\Throwable $th) {
                 return $th->getMessage();
@@ -351,7 +351,7 @@
         {
             try {
                 $this->query->Prepare("UPDATE HISTORIAL SET STATE = 0 WHERE ID=:id");
-                $this->query->Bind("id",$id);
+                $this->query->Bind(":id",$id);
                 return $this->query->Execute();
             } catch (\Throwable $th) {
                 return $th->getMessage();
@@ -361,10 +361,15 @@
         public function dischargeHist($id)
         {
             try {
-                $now = date("Y-m-d H:i:s");
+                $this->query->Prepare("SELECT DISCHARGUE_DATE FROM HISTORIAL WHERE ID=:id");
+                $this->query->Bind(":id",$id);
+                $dd = $this->query->GetRecord();
+                if($dd->DISCHARGUE_DATE!=null)
+                    return false;
+
                 $this->query->Prepare("UPDATE HISTORIAL SET DISCHARGUE_DATE = :date WHERE ID=:id");
-                $this->query->Bind("id",$id);
-                $this->query->Bind("date",$now);
+                $this->query->Bind(":id",$id);
+                $this->query->Bind(":date",date("Y-m-d H:i:s"));
                 return $this->query->Execute();
             } catch (\Throwable $th) {
                 return $th->getMessage();

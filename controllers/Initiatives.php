@@ -65,11 +65,12 @@
          * @return object
          */
 
-        public function add($desc,$id)
+        public function add($id)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
             
+            $desc = $_POST['desc']??NULL;
             $desc = validateAlfaNumeric('Descripción',$desc,'Alfanumeric');
             
             $initiativeService = new InitiativeService;
@@ -99,11 +100,12 @@
          * @return object
          */
 
-        public function edit($desc,$id)
+        public function edit($id)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
 
+            $desc = $_POST['desc']??NULL;
             $desc = validateAlfaNumeric('Descripción',$desc,'Alfanumeric');
             
             $initiativeService = new InitiativeService;

@@ -534,7 +534,8 @@
 
             if(is_string($isDelete))
                 throwError(DELETED_RECORDS_NOT_COMPLETE,'An error ocurred.'.$isDelete);
-
+            else if(!$isDelete)
+                throwError(DELETED_RECORDS_NOT_COMPLETE,'El registro ya tiene una fecha de baja.'.$isDelete);
             returnResponse(RECORDS_DELETE_SUCCESSFULLY,'Historial dado de baja correctamente');
         }
     }

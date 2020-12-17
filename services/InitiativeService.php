@@ -89,7 +89,7 @@
         public function update($desc,$id)
         {
             try {
-                $this->query->Prepare("UPDATE SET DES=:desc WHERE ID=:id");
+                $this->query->Prepare("UPDATE INI SET DES=:desc WHERE ID=:id");
                 $this->query->Bind(":desc",$desc);
                 $this->query->Bind(":id",$id);
                 return $this->query->Execute();
