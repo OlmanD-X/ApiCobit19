@@ -2,6 +2,7 @@
     
     namespace App;
 
+    use Controllers\Areas;
     use Controllers\Cobit19;
     use Controllers\Companies;
     use Controllers\Initiatives;
@@ -67,6 +68,9 @@ class Kernel
                 break;
                 case 'Users': 
                     self::$controller = new Users;
+                break;
+                case 'Areas': 
+                    self::$controller = new Areas;
                 break;
                 default:
                     # code...

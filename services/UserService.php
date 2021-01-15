@@ -120,7 +120,7 @@
         public function edit($username,$pass,$type,$id)
         {
             try {
-                $this->query->Prepare("UPDATE USERS SET USERNAME=:username,PASS=:pass,TYPE_USER:type WHERE ID=:id");
+                $this->query->Prepare("UPDATE USERS SET USERNAME=:username,PASS=:pass,TYPE_USER=:type WHERE ID=:id");
                 $this->query->Bind(":username",$username);
                 $this->query->Bind(":pass",$pass);
                 $this->query->Bind(":type",$type);

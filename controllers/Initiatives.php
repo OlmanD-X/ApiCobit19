@@ -5,15 +5,6 @@
 
     class Initiatives{
         
-        /**
-         * Lista todas las iniciativas de un objetivo estratégico. Método http => GET.
-         * 
-         * URL : /Initiatives/getInitiatives/id
-         * 
-         * @param int $id Id del objetivo estratégico
-         * 
-         * @return object
-         */
         public function getInitiatives($id)
         {
             if($_SERVER['REQUEST_METHOD']!='GET')
@@ -28,16 +19,6 @@
 
             returnResponse(GET_RECORDS_SUCCESSFULLY,'Datos obtenidos exitosamente',$data);
         }
-
-        /**
-         * Obtiene una iniciativa por su id. Método http => GET.
-         * 
-         * URL : /Initiatives/getInitiative/id
-         * 
-         * @param int $id de la iniciativa
-         * 
-         * @return object
-         */
 
         public function getInitiative($id)
         {
@@ -54,23 +35,15 @@
             returnResponse(GET_RECORDS_SUCCESSFULLY,'Datos obtenidos exitosamente',$data);
         }
 
-        /**
-         * Registra una nueva iniciativa. Método htpp => POST.
-         * 
-         * URL : /Initiatives/add/desc/id
-         * 
-         * @param string $desc Descripción de la iniciativa
-         * @param int $id Id del objetivo estratégico
-         * 
-         * @return object
-         */
-
         public function add($id)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
             
             $desc = $_POST['desc']??NULL;
+            $fecha = $_POST['fecha']??NULL;
+            $relations = $_POST['relations']??NULL;
+            $relations = json_decode($relations);
             $desc = validateAlfaNumeric('Descripción',$desc,'Alfanumeric');
             
             $initiativeService = new InitiativeService;
@@ -81,7 +54,7 @@
             else if(is_object($exists))
                 throwError(INSERTED_RECORDS_NOT_COMPLETE,"Ya existe un registro con esta descripción");
 
-            $data = $initiativeService->add($desc,$id);
+            $data = $initiativeService->add($desc,$id,$fecha,$relations);
 
             if(is_string($data))
                 throwError(INSERTED_RECORDS_NOT_COMPLETE,$data);
@@ -89,48 +62,33 @@
             returnResponse(RECORDS_INSERT_SUCCESSFULLY,'Iniciativa registrada exitosamente');
         }
 
-        /**
-         * Edita una iniciativa. Método http => POST.
-         * 
-         * URL : /Initiatives/edit/desc/id
-         * 
-         * @param string $desc Descripción de la iniciativa
-         * @param int $id Id de la iniciativa
-         * 
-         * @return object
-         */
-
         public function edit($id)
         {
             if($_SERVER['REQUEST_METHOD']!='POST')
                 throwError(REQUEST_METHOD_NOT_VALID,'Method http not valid.');
 
             $desc = $_POST['desc']??NULL;
+            $idCompany = $_POST['idCompany']??NULL;
+            $relations = $_POST['relations']??NULL;
+            $relations = json_decode($relations);
+            $fecha = $_POST['fecha']??NULL;
             $desc = validateAlfaNumeric('Descripción',$desc,'Alfanumeric');
             
             $initiativeService = new InitiativeService;
 
-            $exists = $initiativeService->getInitiativeByDescEdit($desc,$id);
+            $exists = $initiativeService->getInitiativeByDescEdit($desc,$id,$idCompany);
             if(is_string($exists))
                 throwError(INSERTED_RECORDS_NOT_COMPLETE,$exists);
             else if(is_object($exists))
                 throwError(INSERTED_RECORDS_NOT_COMPLETE,"Ya existe un registro con esta descripción");
 
-            $data = $initiativeService->update($desc,$id);
+            $data = $initiativeService->update($desc,$id,$fecha,$relations);
 
             if(is_string($data))
                 throwError(UPDATED_RECORDS_NOT_COMPLETE,$data);
 
             returnResponse(RECORDS_UPDATE_SUCCESSFULLY,'Iniciativa actualizada exitosamente');
         }
-
-        /**
-         * Elimina una iniciativa. Método http => DELETE.
-         * 
-         * URL : /Initiatives/delete/id
-         * 
-         * @param int $id Id de la iniciativa
-         */
 
         public function delete($id)
         {
